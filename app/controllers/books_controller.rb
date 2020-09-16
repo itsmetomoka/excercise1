@@ -14,18 +14,21 @@ class BooksController < ApplicationController
     if @book.save
       redirect_to book_path(@book), notice: "successfully created book!"
     else
-      render 'index'
+      @books = Book.all
+      render :index
     end
   end
 
   def edit
+    @book = Book.find(params[:id])
   end
 
   def update
-    if @book.update()
+    @book = Book.find(params[:id])
+    if @book.update(book_params)
       redirect_to book_path(@book), notice: "successfully updated book!"
     else
-      render 'edit'
+      render :edit
     end
   end
 
@@ -34,13 +37,13 @@ class BooksController < ApplicationController
   	redirect_to books_path, notice: "successfully delete book!"
   end
 
-  private
-
   def set_book
     @book = Book.find(params[:id])
   end
 
-  def book_params
-  	params.require(:book).permit(:title, :body)
-  end
+  private
+
+    def book_params
+    	params.require(:book).permit(:title, :body)
+    end
 end
